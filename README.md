@@ -95,9 +95,13 @@ python train.py --model STANN --data_train Path_to_folder/data_train.h5ad --data
 
 ## Demo
 
-Demo data can be downloaded from -->
+Demo data 
 
-Link to data
+<p>
+  <p>
+    <a href="link to download data">Download data</a>
+  </p>
+</p>
 
 Demo code can be run in a jupyter notebook
 

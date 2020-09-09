@@ -47,7 +47,7 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/sameelab/STANN/demo">View Demo</a>
+    <a href="https://github.com/sameelab/STANN/notebooks/demo.ipynb">View Demo</a>
     ·
     <a href="https://github.com/sameelab/STANN/issues">Report Bug</a>
     ·
@@ -95,7 +95,17 @@ python train.py --model STANN --data_train Path_to_folder/data_train.h5ad --data
 
 ## Demo
 
+Demo data can be downloaded from -->
 
+Link to data
+
+Demo code can be run in a jupyter notebook
+
+<p>
+  <p>
+    <a href="https://github.com/sameelab/STANN/notebooks/demo.ipynb">View Demo</a>
+  </p>
+</p>
 
 
 <!-- ROADMAP -->

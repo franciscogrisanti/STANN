@@ -47,7 +47,7 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/sameelab/STANN/notebooks/demo.ipynb">View Demo</a>
+    <a href="https://github.com/sameelab/STANN/blob/master/notebooks/demo.ipynb">View Demo</a>
     ·
     <a href="https://github.com/sameelab/STANN/issues">Report Bug</a>
     ·
@@ -107,7 +107,7 @@ Demo code can be run in a jupyter notebook
 
 <p>
   <p>
-    <a href="https://github.com/sameelab/STANN/notebooks/demo.ipynb">View Demo</a>
+    <a href="https://github.com/sameelab/STANN/blob/master/notebooks/demo.ipynb">View Demo</a>
   </p>
 </p>
 

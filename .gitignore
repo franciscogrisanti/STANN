@@ -1,0 +1,14 @@
+# Ignore this folder
+data/
+output/
+STANN/__pycache__/
+.ipynb_checkpoints/
+ 
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+*.DS_Store
+*.pyc
+STANN/__pycache__

@@ -15,6 +15,13 @@ francisco.grisanticanozo@bcm.edu
 Date: 12/2019
 
 """
+import scanpy as sc
+import pandas as pd
+import sklearn
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+import os 
 
 def print_model(choice):
     """
@@ -27,6 +34,117 @@ def print_model(choice):
         keras.utils.plot_model(model,to_file='model_plot.png',show_shapes=True, show_layer_names=True)
     else:
         print("choose 'summary' or 'plot' output")
+
+
+
+def organize_data(adata_train=None,adata_predict=None):
+    
+    Y_train=None
+    
+    try:
+        
+        
+        X_train = adata_train.to_df()
+        X_predict = adata_predict.to_df()
+        Y_train = pd.DataFrame(adata_train.obs.celltype.copy()).values
+        
+        
+        if (list(X_train.columns) != list(X_predict.columns)):
+            gene_list = list(X_train.columns)
+            indices_sc = list(adata_train.to_df().index)
+            Y_train = pd.DataFrame(adata_train.obs.celltype.copy()).values
+            X_train = adata_train.to_df()
+            X_train = X_train[gene_list]
+            X_predict = adata_predict.to_df()
+            indices_predict = list(adata_predict.to_df().index)
+            X_predict = X_predict[gene_list]
+            
+            print(f'[INFO] Equal columns = {list(X_train.columns) == list(X_predict.columns)}')
+            print("[INFO] Data organized")
+            
+    except:
+        print("Failed -- Data must be same length")
+    
+    return X_train, Y_train, X_predict
+
+def min_max(X=None):
+    X = X.values.astype(float)
+    scaler = sklearn.preprocessing.MinMaxScaler()
+    X_tranformed = scaler.fit_transform(X)
+    return X_tranformed,scaler
+
+def label_encoder(Y_train=None):
+    
+    encoder = sklearn.preprocessing.LabelEncoder()
+    encoder.fit(Y_train)
+    
+    Y_train_dummy = encoder.transform(Y_train)
+    Y_train_ohe = tf.keras.utils.to_categorical(Y_train_dummy)
+    
+    return Y_train_dummy,Y_train_ohe,encoder
+
+
+def train_test_split(X_sc=None, 
+                     encoded_y_sc=None, 
+                     test_size=0.10, 
+                     random_state=40):
+    
+    #Generating train-test split
+    X_train_sc, X_test_sc, y_train_sc, y_test_sc = sklearn.model_selection.train_test_split(X_sc, 
+                                                                                        encoded_y_sc, 
+                                                                                        test_size=0.10, 
+                                                                                        random_state=40)
+
+    print(f'[INFO] X_train shape={X_train_sc.shape}')
+    print(f'[INFO] y_train shape={y_train_sc.shape}')
+    print(f'')
+    print(f'[INFO] X_test shape={X_test_sc.shape}')
+    print(f'[INFO] y_test shape={y_test_sc.shape}')
+    
+    return X_train_sc, X_test_sc, y_train_sc, y_test_sc
+
+def get_class_weights(Y_train_ohe=None):
+    class_weights = sklearn.utils.class_weight.compute_class_weight('balanced' ,np.unique(np.argmax(Y_train_ohe, axis=1)) ,np.argmax(Y_train_ohe, axis=1))
+    return class_weights
+
+def print_metrics(model=None,
+                  x_train=None,
+                  y_train=None,
+                  x_test=None,
+                  y_test=None):
+    
+    # evaluate the model accuracy
+    _, train_acc = model.evaluate(x_train, y_train, verbose=0)
+    _, test_acc = model.evaluate(x_test, y_test, verbose=0)
+    print('[INFO] Accuracy -- Train: %.3f, Test: %.3f' % (train_acc, test_acc))
+    
+    # evaluate the model roc
+    train_roc = sklearn.metrics.roc_auc_score(y_train, model.predict(x_train))
+    test_roc = sklearn.metrics.roc_auc_score(y_test, model.predict(x_test))
+
+    print('[INFO] ROC -- Train: %.3f, Test: %.3f' % (train_roc , test_roc))
+
+def make_predictions(model=None,
+                     X_predict=None,
+                     encoder=None,
+                     adata_predict=None,
+                     probabilities=False,
+                     save=True
+                    ):
+    
+    y_pred = model.predict_classes(X_predict)
+    y_pred = encoder.inverse_transform(y_pred)
+    
+    predictions = adata_predict.obs.copy()
+    predictions['STANN_predictions'] = y_pred
+    
+    if not os.path.exists('../outputs/'):
+        os.makedirs('../outputs')
+    
+    if save == True:
+        predictions.to_csv('../outputs/predictions.csv')
+        
+    return predictions
 
 def cross_validate(n_folds=10,X=None,y=None,model=None):
     """
@@ -186,3 +304,6 @@ def plot_confusion_matrix(cm,
     plt.ylabel('True label')
     plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
     plt.show()
+
+
+    

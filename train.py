@@ -42,11 +42,10 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 # local functions
 from STANN.models import STANN
-from autoencoder_models.utils import cross_validate, plot_confusion_matrix
+from STANN.utils import cross_validate, plot_confusion_matrix
 
 
 #logging.getLogger("tensorflow").setLevel(logging.CRITICAL)
-
 
 ################construct the argument parser and parse the arguments###################
 ap = argparse.ArgumentParser()
@@ -55,34 +54,33 @@ ap.add_argument(
     "-m",
     "--model",
     type=str,
-    default="autoencoder",
+    default="STANN",
     choices=["autoencoder", "class"],
     help="type of model architecture",
 )
 
 ap.add_argument(
-    "-d",
-    "--data",
+    "-dp",
+    "--data_train",
     type=str,
-    required=True,
-    choices=["scrna", "seqfish","other"],
-    help="type of data scrna or seqfish"
+    required=False,
+    help="Path of training dataset"
 )
 
 ap.add_argument(
     "-dp",
-    "--data_path",
+    "--data_predict",
     type=str,
     required=False,
-    help="path of dataset"
+    help="Path of prediction dataset"
 )
 
 ap.add_argument(
     "-o",
     "--output",
     type=str, 
-    default="AE_temp",
-    help="model filename"
+    default="./",
+    help="Path to output"
 )
 
 ap.add_argument(
@@ -121,6 +119,9 @@ def create_data(adata,cell_type_id=None,model=None,pc=False):
             X = adata_all.obsm['X_pca'].astype(float)
             Y = pd.DataFrame(adata.obs[cell_type_id].copy()).values
             return X,Y
+
+
+
 
 ################encoding of target variable###################
 def encode_data(Y):
@@ -235,17 +236,8 @@ else:
 print("[INFO] saving .h5 model ...")
 model.save("../STANN/output/"+args["output"]+".h5")
     
+################ SAVE METADATA RESULTS ###################
 
-
-################ PLOT MODEL ###################
-# plot training history
-#print("\n" + "Training Loss: ", history.history['loss'][-1])
-plt.style.use("ggplot")
-plt.figure(figsize=(10,10))
-plt.plot(history.history['loss'], label='train')
-#plt.plot(history.history['val_loss'], label='test')
-plt.legend()
-plt.ylabel('Loss')
-plt.xlabel('Epoch')
-plt.savefig("../autoencoder/output/"+args["output"]+"_plot.png")
-
+print("[INFO] saving .h5 model ...")
+model.save("../STANN/output/"+args["output"]+".h5")
+    

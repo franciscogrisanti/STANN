@@ -75,11 +75,28 @@ tensorflow==2.1.0 keras==2.2.4-tf
 
 ## Usage
 
-Pending
+Install conda environment
+
+```sh
+conda env create -f environment.yml
+```
+
+Activate conda environment 
+
+```sh
+conda activate STANN
+```
+
+Run model on your data
+
+```sh
+python train.py --model STANN --data_train Path_to_folder/data_train.h5ad --data_predict Path_to_folder/data_predict.h5ad --output Path_to_Output_folder/
+```
 
 ## Demo
 
-Pending c
+
+
 
 <!-- ROADMAP -->
 ## Roadmap

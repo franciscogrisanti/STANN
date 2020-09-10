@@ -90,7 +90,7 @@ conda activate STANN
 Run model on your data
 
 ```sh
-python train.py --model STANN --data_train ./path_to_training_data/data.h5ad --data_predict ./path_to_predict_data/data.h5ad --output ./path_to_output --project name_of_project
+python train.py --model STANN --data_train ./path_to_training_data/data.h5ad --data_predict ./path_to_predict_data/data.h5ad --output ./path_to_output/ --project name_of_project
 ```
 
 ## Demo

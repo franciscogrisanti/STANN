@@ -3,7 +3,7 @@ data/
 output/
 STANN/__pycache__/
 .ipynb_checkpoints/
- 
+ STANN.code-workspace
 
 # OS generated files #
 ######################

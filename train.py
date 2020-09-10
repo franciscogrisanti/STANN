@@ -136,6 +136,7 @@ x_train, x_test, y_train, y_test = utils.get_train_test_split(X_train_scaled,
                                                     random_state=40)
 
 class_weights = utils.get_class_weights(Y_train_ohe=y_train)
+class_weights = {i : class_weights[i] for i in range(15)}
 
 es = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
                                       mode='min', 
@@ -146,7 +147,7 @@ history = model.fit(x_train,
                     y_train, 
                     validation_data=(x_test, y_test),
                     epochs=30,
-                    class_weight=class_weight,
+                    class_weight=class_weights,
                     callbacks=[es],verbose=0)
 
 utils.print_metrics(model=model,

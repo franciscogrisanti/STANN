@@ -21,7 +21,9 @@ import sklearn
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-import os 
+import os
+from sklearn.model_selection import train_test_split
+from sklearn.utils import class_weight
 
 def print_model(choice):
     """
@@ -84,13 +86,13 @@ def label_encoder(Y_train=None):
     return Y_train_dummy,Y_train_ohe,encoder
 
 
-def train_test_split(X_sc=None, 
+def get_train_test_split(X_sc=None, 
                      encoded_y_sc=None, 
                      test_size=0.10, 
                      random_state=40):
     
     #Generating train-test split
-    X_train_sc, X_test_sc, y_train_sc, y_test_sc = sklearn.model_selection.train_test_split(X_sc, 
+    X_train_sc, X_test_sc, y_train_sc, y_test_sc = train_test_split(X_sc, 
                                                                                         encoded_y_sc, 
                                                                                         test_size=0.10, 
                                                                                         random_state=40)
@@ -104,7 +106,7 @@ def train_test_split(X_sc=None,
     return X_train_sc, X_test_sc, y_train_sc, y_test_sc
 
 def get_class_weights(Y_train_ohe=None):
-    class_weights = sklearn.utils.class_weight.compute_class_weight('balanced' ,np.unique(np.argmax(Y_train_ohe, axis=1)) ,np.argmax(Y_train_ohe, axis=1))
+    class_weights = class_weight.compute_class_weight('balanced' ,np.unique(np.argmax(Y_train_ohe, axis=1)) ,np.argmax(Y_train_ohe, axis=1))
     return class_weights
 
 def print_metrics(model=None,
